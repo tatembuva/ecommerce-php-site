@@ -12,9 +12,58 @@
 class StaticGenerator {
     private $static_dir = '/../../../static';
     private $db;
-    public function __construct($dbConnector){
+
+    public function __construct($dbConnector)
+    {
         echo "From Generator Constructor...";
         $this->db = $dbConnector;
+        $this->gen_pages(0);
+    }
+
+    /* Update = 0 => Does not compile file if file exists, 1 => force 
+     * compile */
+    public function gen_pages($update)
+    {
+        echo 'Init...';
+        $curState = $this->db->db_init();
+
+        /* Generate default pages */
+        foreach($curState['pages'] as $value)
+        {
+
+            /* Check if file exists */ 
+            if(file_exists(dirname(__FILE__).$this->static_dir.
+                $value['slug'].'index.html'))
+            {
+
+                if($update = 1)
+                {
+                    /* Recompile the template anyway */
+                }
+
+            }
+            else 
+            {
+                if(is_dir(dirname(__FILE__).$this->static_dir.
+                $value['slug']))
+                {
+                    $file = fopen(dirname(__FILE__).$this->static_dir.
+                    $value['slug'].'index.html', 'wb');
+                    fclose($file);
+
+                }
+                else
+                {
+                    mkdir(dirname(__FILE__).$this->static_dir.
+                        $value['slug'], 0774); 
+                    $file = fopen(dirname(__FILE__).$this->static_dir.
+                    $value['slug'].'index.html', 'wb');
+                    fclose($file);
+
+                }
+            }
+        }
+
     }
 
     /* Read the static dir and create dir structure */
