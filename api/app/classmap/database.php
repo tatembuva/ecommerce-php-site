@@ -34,7 +34,7 @@ class DBConnector {
             $page = R::dispense('page');
             $page->title = 'Home';
             $page->slug = '/';
-            $page->template = 'home_page.php';
+            $page->template = 'home_page.twig';
             $id = R::store($page);
 
             unset($page, $id);
@@ -42,7 +42,7 @@ class DBConnector {
             $page = R::dispense('page');
             $page->title = 'About';
             $page->slug = '/about/';
-            $page->template = 'about_page.php';
+            $page->template = 'about_page.twig';
             $id = R::store($page);
 
             unset($page, $id);
