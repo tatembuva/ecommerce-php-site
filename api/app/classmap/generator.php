@@ -11,20 +11,21 @@
 
 class StaticGenerator {
     private $static_dir = '/../../../static';
+    private $template_dir = '/../templates';
     private $db;
 
     public function __construct($dbConnector)
     {
-        echo "From Generator Constructor...";
+        //echo "From Generator Constructor...";
         $this->db = $dbConnector;
-        $this->gen_pages(0);
+        $this->gen_pages(1);
     }
 
     /* Update = 0 => Does not compile file if file exists, 1 => force 
      * compile */
     public function gen_pages($update)
     {
-        echo 'Init...';
+        //echo 'Init...';
         $curState = $this->db->db_init();
 
         /* Generate default pages */
@@ -39,6 +40,11 @@ class StaticGenerator {
                 if($update = 1)
                 {
                     /* Recompile the template anyway */
+                    $temp_text = $this->compile_template($value['template'],
+                    $value['page_data_id']);
+                    file_put_contents(dirname(__FILE__).$this->static_dir.
+                $value['slug'].'index.html', $temp_text);
+                    
                 }
 
             }
@@ -66,9 +72,29 @@ class StaticGenerator {
 
     }
 
+    /* Compile page template */
+    private function compile_template($template, $dataId){
+        
+        $data = $this->db->get_page_data($dataId);
+        //echo '<br />';
+        //echo $dataId;
+        //print_r($data);
+
+        $loader = new \Twig\Loader\FilesystemLoader(
+            dirname(__FILE__).$this->template_dir );
+
+        $twig = new \Twig\Environment($loader);
+
+        $output = $twig->render($template, $data);
+
+        return $output;
+
+
+    }
+
     /* Read the static dir and create dir structure */
     public function read_static_dir(){
-        echo "From Generator Method";
+        //echo "From Generator Method";
         $static_contents = scandir(dirname(__FILE__).$this->static_dir);
         return $static_contents;
     }

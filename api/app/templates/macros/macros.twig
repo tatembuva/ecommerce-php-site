@@ -1,0 +1,20 @@
+{% macro nav_link_active(page_link, active_page)%}
+    
+    {% set pl = page_link|lower %}
+    {% set ap = active_page|lower %}
+    {% if pl == ap %}
+        active      
+    {% endif %}
+
+{% endmacro%}
+
+{% macro nav_page_depth(page_depth) %}
+
+    {%- if page_depth == 0 -%}
+    {%- elseif page_depth == 1 -%}
+    {{- '..'|e('url') -}}
+    {%- elseif page_depth == 2 -%}
+    {{- '../..'|e('url') -}}
+    {%- endif -%}
+
+{% endmacro %}

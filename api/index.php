@@ -14,6 +14,7 @@ $db = new DBConnector();
 $gen = new StaticGenerator($db);
 
 
+
 $app->get('/api', function (Request $request, Response $response, $args) {
     $info = phpinfo();
     $response->getBody()->write("SlimPhp Store Api");
@@ -35,6 +36,52 @@ $app->get('/api/site-gen', function(Request $request, Response $response, $args)
     return $response;
 });
 
+$app->get('/api/get-product/{id}', function(Request $request, Response $response, $args){
+   
+    global $db;
+
+    $id = $args['id'];
+    $data = array($db-> get_product($id));
+    $payload = json_encode($data);
+
+    $response->getBody()->write($payload);
+
+    return $response
+            ->withHeader('Content-Type', 'application/json')
+            ->withStatus(201);
+});
+
+$app->get('/api/get-orders/{client-id}', function(Request $request, Response $response, $args){
+   
+    global $db;
+
+    $id = $args['client-id'];
+    $data = array($db-> get_order($id));
+    $payload = json_encode($data);
+
+    $response->getBody()->write($payload);
+
+    return $response
+            ->withHeader('Content-Type', 'application/json')
+            ->withStatus(201);
+});
+
+
+$app->post('/api/new-order',
+    function ( Request $request, Response $response, array $args) {
+        global $db;
+        $req = $request->getParsedBody();
+
+        $data = array($db-> post_order($req));
+        $payload = json_encode($data);
+
+        $response->getBody()->write($payload);
+        //Return new response obj to client
+        return $response
+            ->withHeader('Content-Type', 'application/json')
+            ->withStatus(201);
+    }
+);
 
 
 $app->run();

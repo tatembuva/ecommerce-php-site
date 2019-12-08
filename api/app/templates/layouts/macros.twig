@@ -1,0 +1,9 @@
+{% macro nav_link_active(page_link, active_page)%}
+    
+    {% set pl = page_link|lower %}
+    {% set ap = active_page|lower %}
+    {% if pl == ap %}
+        active      
+    {% endif %}
+
+{% endmacro%}
